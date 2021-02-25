@@ -1,0 +1,5 @@
+2021-02-08 09:15:07,245 WARN  [DefaultSoapUICore] Missing folder [C:\Users\liuya\ext] for external libraries
+2021-02-08 09:15:08,083 INFO  [DefaultSoapUICore] initialized soapui-settings from [C:\Users\liuya\soapui-settings.xml]
+2021-02-08 09:15:09,435 INFO  [WorkspaceImpl] Loading workspace from [C:\Users\liuya\intellij-soapui-workspace.xml]
+2021-02-08 13:46:57,535 INFO  [WorkspaceImpl] Saved workspace to [C:\Users\liuya\intellij-soapui-workspace.xml]
+2021-02-08 13:46:57,585 INFO  [DefaultSoapUICore] Settings saved to [C:\Users\liuya\soapui-settings.xml]
