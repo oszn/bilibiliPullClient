@@ -1,29 +1,44 @@
 package com.myLogger.http;
 
 import com.alibaba.fastjson.JSONObject;
+import com.myLogger.component.tools.json2map;
 import com.myLogger.consist.ErrorEnum;
+import com.myLogger.dao.entry.Bili;
 import com.myLogger.dao.entry.Bilibili;
 import com.myLogger.dao.entry.Bilibilistep;
 import com.myLogger.dao.entry.Errorlog;
+import com.myLogger.dao.mapper.BiliMapper;
 import com.myLogger.dao.mapper.BilibiliMapper;
 import com.myLogger.dao.mapper.BilibilistepMapper;
 import com.myLogger.dao.mapper.ErrorlogMapper;
 import okhttp3.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Date;
+
 @Service
 public class walkMilk {
     @Autowired
-    BilibiliMapper bilibiliMapper;
+    BiliMapper bilibiliMapper;
     @Autowired
     BilibilistepMapper bilibilistepMapper;
     @Autowired
     ErrorlogMapper errorlogMapper;
+    @Autowired
+    json2map j2m;
     @Value("${table.number}")
     String n;
+    @Value("${liuyi.remoteip}")
+    String remoteip;
+    @Value("${liuyi.localip}")
+    String localip;
+
+    public final Logger logger= LoggerFactory.getLogger(this.getClass());
     public ResponseBody doFetch(String uid){
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
@@ -50,7 +65,7 @@ public class walkMilk {
                 .addFormDataPart("log",log)
                 .build();
         Request request = new Request.Builder()
-                .url("http://42.193.170.22:13672/insertLog")
+                .url("http://"+remoteip+":13672/insertLog")
                 .method("POST", body)
                 .build();
         try {
@@ -60,16 +75,16 @@ public class walkMilk {
         }
 
     }
-    public int mul(){
+    public int mul(int limit){
 //        System.out.println("?");
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("text/plain");
         RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("limit","100")
+                .addFormDataPart("limit", String.valueOf(limit))
                 .build();
         Request request = new Request.Builder()
-                .url("http://42.193.170.22:61010/getjob")
+                .url("http://"+remoteip+":61010/getjob")
                 .method("POST", body)
                 .build();
         try {
@@ -88,6 +103,8 @@ public class walkMilk {
         }
         return j;
     }
+
+
     public void eLog(String uid,int type,Exception e){
         Errorlog errorlog=new Errorlog();
         errorlog.setMid(Long.parseLong(uid));
@@ -95,6 +112,8 @@ public class walkMilk {
         errorlog.setType(type);
         errorlogMapper.insert(errorlog);
     }
+
+
     public String insert(String uid,String epoch){
         Bilibilistep c=bilibilistepMapper.selectByPrimaryKey(epoch);
         if(uid=="null"){
@@ -108,47 +127,17 @@ public class walkMilk {
         } catch (IOException e) {
             eLog(uid,ErrorEnum.FETCH_ERR.type(),e);
             e.printStackTrace();
-
         }
-        JSONObject j=JSONObject.parseObject(ans);
-        Bilibili bilibili = new Bilibili();
-        JSONObject data=get(j,"data");
-        JSONObject card=get(j,"data","card");
 
-        bilibili.setArticle(card.getString("article"));
-        bilibili.setSex(card.getString("sex"));
-        bilibili.setAttention(card.getString("attention"));
-        bilibili.setMid(card.getLong("mid"));
-        bilibili.setDescription(card.getString("description"));
-        bilibili.setFans(card.getLong("fans"));
-        bilibili.setName(card.getString("name"));
-        bilibili.setFace(card.getString("face"));
-        bilibili.setFriend(card.getString("friend"));
-        bilibili.setRank(card.getString("rank"));
-        bilibili.setSign(card.getString("sign"));
-        bilibili.setBirthday(card.getString("birthday"));
-        JSONObject VIP=get(card,"vip");
-        bilibili.setViptype(VIP.getInteger("vipType"));
-        bilibili.setVipstatus(VIP.getInteger("vipStatus"));
-
-        bilibili.setFollower((long)data.getInteger("follower"));
-        bilibili.setArticleCount((long)data.getInteger("article_count"));
-        bilibili.setArchiveCount((long)data.getInteger("archive_count"));
-        System.out.println(j);
-
+        Bili bilibili = new Bili();
         bilibili.setMac(n);
+        bilibili.setInsertDate(new Date(System.currentTimeMillis()));
 
-        bilibiliMapper.insert(bilibili);
+        j2m.init(ans,bilibili);
+
+        bilibiliMapper.insertSelective(bilibili);
         c.setValue(c.getValue()+1);
         bilibilistepMapper.updateByPrimaryKey(c);
-
-
-        String keym= String.valueOf(bilibili.getMid())+"_"+n;
-        try {
-            logfile(keym,ans);
-        }catch (Exception  e){
-            e.printStackTrace();
-        }
 
         return uid;
     }
