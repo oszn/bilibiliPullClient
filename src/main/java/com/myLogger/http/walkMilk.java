@@ -22,6 +22,7 @@ import java.net.Proxy;
 import java.net.SocketTimeoutException;
 import java.security.PublicKey;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class walkMilk {
@@ -63,6 +64,8 @@ public class walkMilk {
         IpProxy ipProxy=getIpProxy();
         Proxy proxy=new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ipProxy.getIp(), ipProxy.getPort()));
         builder.proxy(proxy);
+        builder.connectTimeout(500, TimeUnit.MILLISECONDS);
+        builder.readTimeout(1000,TimeUnit.MILLISECONDS);
         OkHttpClient client=builder.build();
         Request request = new Request.Builder()
                 .url("http://api.bilibili.com/x/web-interface/card?mid="+uid+"&photo=true")
