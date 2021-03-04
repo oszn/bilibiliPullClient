@@ -8,4 +8,5 @@ import java.lang.reflect.Proxy;
 public interface ProxyService {
     Proxy getProxy();
     IpProxy getMyProxy();
+    void deleteProxy(String ip);
 }

@@ -5,15 +5,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-
+@Component
 public class NormalFetchHttp implements MyHttpService{
     @Override
-    public Integer UUID() {
-        return HttpType.NORMAL_FETCH.value();
+    public HttpType UUID() {
+        return HttpType.NORMAL_FETCH;
     }
 
     /*

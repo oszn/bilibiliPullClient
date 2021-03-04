@@ -4,10 +4,10 @@ package com.liuy.service.http;
 import com.liuy.consist.HttpType;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
+@Component
 public class NormalIndexHttp implements MyHttpService{
     @Value("${table.number}")
     String n;
@@ -17,8 +17,8 @@ public class NormalIndexHttp implements MyHttpService{
     String localip;
 
     @Override
-    public Integer UUID() {
-        return HttpType.NORMAL_INDEX.value();
+    public HttpType UUID() {
+        return HttpType.NORMAL_INDEX;
     }
 
     /*
@@ -36,7 +36,7 @@ public class NormalIndexHttp implements MyHttpService{
                 .addFormDataPart("limit", String.valueOf(input[0]))
                 .build();
         Request request = new Request.Builder()
-                .url("http://"+localip+":61010/"+input[1])
+                .url("http://"+remoteip+":61010/"+input[1])
                 .method("POST", body)
                 .build();
         try {

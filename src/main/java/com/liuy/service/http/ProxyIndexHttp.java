@@ -6,11 +6,12 @@ import com.liuy.service.proxy.ExtraProxyService;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-
+@Component
 public class ProxyIndexHttp implements MyHttpService{
     @Value("${table.number}")
     String n;
@@ -22,8 +23,8 @@ public class ProxyIndexHttp implements MyHttpService{
     ExtraProxyService proxyService;
 
     @Override
-    public Integer UUID() {
-        return HttpType.PROXY_INDEX.value();
+    public HttpType UUID() {
+        return HttpType.PROXY_INDEX;
     }
 
     /*

@@ -116,6 +116,9 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="selectAll" resultType="com.liuy.dao.entry.Goodproxy">
+    SELECT ip,port from goodProxy;
+  </select>
   <update id="updateByPrimaryKeySelective" parameterType="com.liuy.dao.entry.Goodproxy">
     <!--
       WARNING - @mbg.generated

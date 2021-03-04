@@ -11,7 +11,7 @@ table:
   number: 0
 
 server:
-  port: 11111
+  port: 11112
 
 liuyi:
   remoteip: 42.193.170.22

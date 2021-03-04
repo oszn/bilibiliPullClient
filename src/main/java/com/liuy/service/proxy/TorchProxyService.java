@@ -18,4 +18,9 @@ public class TorchProxyService implements ProxyService{
     public IpProxy getMyProxy() {
         return null;
     }
+
+    @Override
+    public void deleteProxy(String ip) {
+
+    }
 }

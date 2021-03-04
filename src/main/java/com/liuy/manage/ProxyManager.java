@@ -21,10 +21,12 @@ public class ProxyManager {
 //        return proxyMapper.selectCount();
     return 0;
     }
-
+    public int deleteIp(String ip){
+        return proxyMapper.deleteByPrimaryKey(ip);
+    }
     public List<Goodproxy> getGoodProxyList(){
-//        return proxyMapper.selectAll();
-        return new ArrayList<Goodproxy>() ;
+        return proxyMapper.selectAll();
+//        return new ArrayList<Goodproxy>() ;
     }
 
 }

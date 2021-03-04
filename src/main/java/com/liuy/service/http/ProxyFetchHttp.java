@@ -9,20 +9,21 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
-
+@Component
 public class ProxyFetchHttp implements MyHttpService{
     @Autowired
     ExtraProxyService proxyService;
 
     @Override
-    public Integer UUID() {
-        return HttpType.PROXY_FETCH.value();
+    public HttpType UUID() {
+        return HttpType.PROXY_FETCH;
     }
 
     @Override
@@ -42,10 +43,12 @@ public class ProxyFetchHttp implements MyHttpService{
                 .build();
         try {
 //            System.out.println(ipProxy);
+            proxyService.deleteProxy(ipProxy.getIp());
             Response response = client.newCall(request).execute();
             return response.body();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+
             return null;
         }
     }
