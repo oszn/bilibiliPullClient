@@ -1,0 +1,18 @@
+spring:
+  redis:
+    cache:
+      port: 6379
+      host: 42.193.170.22
+      database: 1
+      password: 123456ly
+
+
+table:
+  number: 0
+
+server:
+  port: 9999
+
+liuyi:
+  remoteip: 42.193.170.22
+  localip: 127.0.0.1
